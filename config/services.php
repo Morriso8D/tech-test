@@ -31,7 +31,7 @@ return [
     ],
 
     'copy_and_pay' => [
-        'endpoint' => env('COPY_AND_PAY_ENDPOINT'),
+        'base_url' => env('COPY_AND_PAY_BASE_URL'),
         'secret' => env('COPY_AND_PAY_SECRET'),
         'entity_id' => env('COPY_AND_PAY_ENTITY_ID')
     ]

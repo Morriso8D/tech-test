@@ -1,3 +1,13 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.wpwl-form{
+    margin: 1rem 0 0 0;
+}
+.wpwl-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20rem;
+}

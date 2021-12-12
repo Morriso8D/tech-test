@@ -15,11 +15,12 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('amount', 12);
+            $table->float('amount');
+            $table->string('currency', 10);
             $table->string('result_code');
             $table->string('result_description');
             $table->string('reference', 255);
-            $table->bigInteger('user_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

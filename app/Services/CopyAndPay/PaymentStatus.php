@@ -13,7 +13,7 @@ class PaymentStatus
 
     public function __construct()
     {
-        $this->endpoint = config('services.copy_and_pay.endpoint');
+        $this->baseUrl = config('services.copy_and_pay.base_url');
         $this->secret = config('services.copy_and_pay.secret');
         $this->entityId = config('services.copy_and_pay.entity_id');
     }
@@ -26,7 +26,7 @@ class PaymentStatus
 
     private function buildEndpoint($data)
     {
-        return "{$this->endpoint}/{$data->id}/payment?entityId={$this->entityId}";
+        return "{$this->baseUrl}{$data->resourcePath}?entityId={$this->entityId}";
     }
 
     private function post($endpoint)
@@ -63,7 +63,7 @@ class PaymentStatus
 
         } catch (\Exception $err) {
             
-            Log::error("CopyAndPay\PaymentStatus.php failed to send. Error: {$err}");
+            Log::error("CopyAndPay\PaymentStatus.php failed to send. Error: {$err}\n\n endpoint: {$endpoint}");
         }
     }
 }

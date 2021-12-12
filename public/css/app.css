@@ -32137,6 +32137,17 @@ select {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.wpwl-form{
+  margin: 1rem 0 0 0;
+}
+
+.wpwl-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20rem;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

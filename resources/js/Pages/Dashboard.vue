@@ -8,14 +8,17 @@
                     Dashboard
                 </h2>
             </template>
-
             <div class="py-12">
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+                    <Message v-if="message.show" icon="pi pi-check" severity="success">{{ message.content }}</Message>
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="md:grid md:grid-cols-2 md:gap-3 px-4">
-                            <form @submit.prevent="submit" class="md:col-span-1">
-                                <div class="mt-4">
+                        <div class="container px-4 justify-center items-center flex">
+                            <form v-if="!copyAndPayForm.show" @submit.prevent="submit" class="w-full h-96">
+                                <div class="mt-4 flex justify-between">
                                     <h3 class="text-lg font-medium leading-6 text-gray-900">Payment Details</h3>
+                                    <BreezeButton :disabled="form.processing">
+                                        Submit
+                                    </BreezeButton>
                                 </div>
                                 <BreezeValidationErrors class="mt-4"/>
                                 <div class="w-full mt-4">
@@ -26,18 +29,17 @@
                                     <BreezeLabel for="reference" value="Reference"/>
                                     <BreezeInput id="reference" type="text" class="mt-1 block w-full" v-model="form.reference" required/>
                                 </div>
-                                <div class="flex items-center justify-start my-4">
-                                    <BreezeButton :disabled="form.processing">
-                                        Submit
-                                    </BreezeButton>
-                                </div>
                             </form>
 
-                            <div class="md:col-span-1">
-                                <div class="mt-4">
+                            <div v-if="copyAndPayForm.show" class="w-full h-96">
+                                <div class="mt-4 flex justify-between">
                                     <h3 class="text-lg font-medium leading-6 text-gray-900">Card Details</h3>
+                                    <BreezeButton :disabled="form.processing" @click="initCopyAndPayForm">
+                                    <i class="pi pi-angle-left"></i>
+                                        Back
+                                    </BreezeButton>
                                 </div>
-                                <CopyAndPayForm v-if="copyAndPayForm.show" :checkoutId="copyAndPayForm.checkoutId"/>
+                                <CopyAndPayForm :checkoutId="copyAndPayForm.checkoutId"/>
                             </div>
                         </div>
                     </div>
@@ -56,6 +58,7 @@ import BreezeButton from '@/Components/Button.vue'
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
 import CurrencyInput from '@/Components/CurrencyInput.vue'
 import CopyAndPayForm from '@/Components/CopyAndPayForm.vue'
+import Message from 'primevue/message'
 
 export default {
     components: {
@@ -66,7 +69,8 @@ export default {
         BreezeButton,
         BreezeValidationErrors,
         CurrencyInput,
-        CopyAndPayForm
+        CopyAndPayForm,
+        Message
     },
     data() {
         return {
@@ -75,14 +79,16 @@ export default {
                 amount: '',
                 currency: 'GBP'
             }),
-            copyAndPayForm: {
+            copyAndPayForm: {},
+            message: {
                 show: false,
-                checkoutId: ''
+                content: ''
             }
         }
     },
     mounted() {
-        console.log(this.$page.props.flash.transaction)
+        this.initCopyAndPayForm()
+       if(this.$page.props.flash.transaction) this.showMessage(this.$page.props.flash.transaction)
     },
     methods: {
         submit() {
@@ -91,9 +97,19 @@ export default {
                 onSuccess: (data) => {
                     this.copyAndPayForm.checkoutId = this.$page.props.flash.checkoutId
                     this.copyAndPayForm.show = true
-                    // this.form.reset()
                 },
             })
+        },
+        showMessage(transaction) {
+            const { result_code, result_description } = transaction
+            this.message.content = `Payment Successful!   code: ${result_code} description: ${result_description}`
+            this.message.show = true
+        },
+        initCopyAndPayForm() {
+            this.copyAndPayForm = {
+                show: false,
+                checkoutId: ''
+            }
         }
     }
 }

@@ -10,13 +10,29 @@ export default {
             type: String
         }
     },
-    mounted() {
-        let copyAndPayScript = document.createElement('script')
-        copyAndPayScript.setAttribute('src', `https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${this.checkoutId}`)
-        document.head.appendChild(copyAndPayScript)
+    data() {
+        return {
+            copyAndPayScript: null
+        }
     },
-    unmounted() {
-
+    mounted() {
+        this.copyAndPayScript = document.createElement('script')
+        this.copyAndPayScript.setAttribute('src', `https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${this.checkoutId}`)
+        document.head.appendChild(this.copyAndPayScript)
+    },
+    beforeUnmount() {
+        this.copyAndPayScript.parentNode.removeChild(this.copyAndPayScript)
+        if (window.wpwl !== undefined && window.wpwl.unload !== undefined) {
+            window.wpwl.unload()
+            let scripts = document.querySelectorAll('script')
+            scripts.forEach((script) => {
+                
+                if(script.src.indexOf('static.min.js') !== -1) {
+                    document.head.removeChild(script)
+                }
+            
+            })
+        }
     }
 }
 </script>

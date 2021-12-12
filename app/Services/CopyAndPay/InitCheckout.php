@@ -12,7 +12,7 @@ class InitCheckout
 
     public function __construct()
     {
-        $this->endpoint = config('services.copy_and_pay.endpoint');
+        $this->endpoint = $this->buildEndpoint(config('services.copy_and_pay.base_url'));
         $this->secret = config('services.copy_and_pay.secret');
         $this->entityId = config('services.copy_and_pay.entity_id');
     }
@@ -21,6 +21,11 @@ class InitCheckout
     {
         $payload = $this->buildPayload($data);
         return $this->post($payload);
+    }
+
+    private function buildEndpoint($baseUrl)
+    {
+        return "{$baseUrl}/v1/checkouts";
     }
 
     private function buildPayload($data)

@@ -12,7 +12,7 @@ class TransactionController extends Controller
     {
         $request->validate([
             'reference' => 'required|string|min:8|max:255',
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
             'currency' => 'required|in:GBP,EUR,USD'
         ]);
 
@@ -23,7 +23,7 @@ class TransactionController extends Controller
         return redirect()->route('dashboard')->with('checkoutId', $checkoutId);
     }
 
-    public function results(Request $request)
+    public function result(Request $request)
     {
         $request->validate([
             'id' => 'required',
@@ -34,6 +34,7 @@ class TransactionController extends Controller
 
         $transaction = Transaction::create([
             'amount' => $paymentStatus->amount,
+            'currency' => $paymentStatus->currency,
             'result_code' => $paymentStatus->result->code, 
             'result_description' => $paymentStatus->result->description, 
             'reference' => $paymentStatus->merchantTransactionId,

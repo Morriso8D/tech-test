@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +20,15 @@ use App\Http\Controllers\TransactionController;
 Route::post('/dashboard/transaction/create', [TransactionController::class, 'create'])
 ->middleware(['auth'])->name('transaction.create');
 
-Route::get('/dashboard/transaction/results', [TransactionController::class, 'results'])
+Route::get('/dashboard/transaction/results', [TransactionController::class, 'result'])
 ->middleware(['auth'])->name('transaction.results');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/history', [HistoryController::class, 'index'])
+->middleware(['auth'])->name('history');
 
 Route::permanentRedirect('/', '/dashboard');
 
